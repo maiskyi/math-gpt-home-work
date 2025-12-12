@@ -1,6 +1,6 @@
 {
-  "name": "math-gpt-home-work-andrii-maiskyi",
-  "displayName": "MathGPT Home Work",
+  "name": "math-gpt-home-work",
+  "displayName": "Math gpt home work",
   "version": "0.0.1",
   "description": "Extension that allows you to place sticky, moveable, liquid glass style, UI elements (namely a tooltip) anywhere on the screen.",
   "author": "Andrii Maiskyi",
