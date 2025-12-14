@@ -1,13 +1,14 @@
 import { memo, type FC, type PointerEventHandler } from "react"
 
 export interface TooltipItemModalProps {
+  onClose: () => void
   onPointerUp: PointerEventHandler<HTMLDivElement>
   onPointerMove: PointerEventHandler<HTMLDivElement>
   onPointerDown: PointerEventHandler<HTMLDivElement>
 }
 
 export const TooltipItemModal: FC<TooltipItemModalProps> = memo(
-  ({ onPointerDown, onPointerMove, onPointerUp }) => {
+  ({ onPointerDown, onPointerMove, onPointerUp, onClose }) => {
     return (
       <div className="tooltip-item-modal plasmo-rounded-3xl plasmo-border plasmo-text-white plasmo-shadow-2xl/20 plasmo-backdrop-blur-sm plasmo-transition plasmo-duration-300 plasmo-pointer-events-auto tooltip-entrance">
         <div
@@ -21,6 +22,21 @@ export const TooltipItemModal: FC<TooltipItemModalProps> = memo(
             <div className="plasmo-w-1 plasmo-h-1 plasmo-bg-white/40 plasmo-rounded-full"></div>
           </div>
         </div>
+        <button
+          onClick={onClose}
+          className="plasmo-absolute plasmo-top-2 plasmo-right-2 plasmo-w-6 plasmo-h-6 plasmo-text-white/70 plasmo-text-sm plasmo-hover:text-white plasmo-bg-white/20 plasmo-hover:bg-white/30 plasmo-rounded-full plasmo-transition-all plasmo-duration-200 plasmo-z-30 plasmo-flex plasmo-items-center plasmo-justify-center">
+          <svg
+            className="plasmo-w-4 plasmo-h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="2.5">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 12h14"></path>
+          </svg>
+        </button>
       </div>
     )
   },

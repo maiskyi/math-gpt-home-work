@@ -72,6 +72,7 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
       <TooltipItemToggle onClick={handleOnToggle} />
       {isOpen && (
         <TooltipItemModal
+          onClose={handleOnToggle}
           onPointerDown={handleOnPointerDown}
           onPointerMove={handleOnPointerMove}
           onPointerUp={handleOnPointerUp}
