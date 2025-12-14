@@ -29,19 +29,19 @@ export const Tooltips: FC = () => {
       characterData: true,
     })
 
-    window.addEventListener("scroll", schedule, { passive: true })
+    // window.addEventListener("scroll", schedule, { passive: true })
     window.addEventListener("resize", schedule)
 
     return () => {
       mo.disconnect()
-      window.removeEventListener("scroll", schedule)
+      // window.removeEventListener("scroll", schedule)
       window.removeEventListener("resize", schedule)
     }
   }, [])
 
   return (
     <div className="plasmo-root plasmo-fixed plasmo-top-0 plasmo-left-0 plasmo-z-[999999]">
-      {tooltips.splice(0, 1).map((tooltip) => {
+      {tooltips.map((tooltip) => {
         return <TooltipItem key={tooltip.id} {...tooltip} />
       })}
     </div>

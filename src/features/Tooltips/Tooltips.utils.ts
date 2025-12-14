@@ -33,13 +33,15 @@ export function* textNodesUnder(root: Node): Generator<Text> {
 export const collectHits = (): TooltipItemProps[] => {
   const hits: TooltipItemProps[] = []
   const root = document.body
-  if (!root) return hits
+
+  if (!root) return []
 
   for (const tn of textNodesUnder(root)) {
-    const text = tn.nodeValue ?? ""
+    const text = tn.nodeValue;
     RE.lastIndex = 0
     const matches = [...text.matchAll(RE)]
     if (matches.length === 0) continue
+    console.log({matches})
 
     for (const m of matches) {
       const start = m.index ?? 0
@@ -50,7 +52,7 @@ export const collectHits = (): TooltipItemProps[] => {
       range.setEnd(tn, end)
 
       const rects = range.getClientRects()
-      
+
       // A match can span multiple rects (line wraps). We'll place one icon per rect.
       Array.from(rects).forEach((r, idx) => {
         if (r.width === 0 || r.height === 0) return

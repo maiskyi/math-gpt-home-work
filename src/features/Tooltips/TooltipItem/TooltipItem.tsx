@@ -26,7 +26,7 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
   })
 
   const [{ isOpen, left, top }, setState] = useState({
-    isOpen: true,
+    isOpen: false,
     left: targetRect.left + targetRect.width + TOOLTIP_ITEM_OFFSET,
     top: targetRect.top - targetRect.height + TOOLTIP_ITEM_OFFSET,
   })
@@ -43,9 +43,9 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
       if (!root.current) return
       dragger.current.isDragging = true
       currentTarget.setPointerCapture(pointerId)
-      const { x, y } = root.current.getBoundingClientRect()
-      dragger.current.startX = clientX - x
-      dragger.current.startY = clientY - y
+      const { left, top } = root.current.getBoundingClientRect()
+      dragger.current.startX = clientX - left - window.scrollX
+      dragger.current.startY = clientY - top - window.scrollY
     },
     [],
   )
@@ -56,12 +56,12 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
   }, [])
 
   const handleOnPointerMove: PointerEventHandler<HTMLDivElement> = useCallback(
-    ({ clientY, clientX }) => {
+    ({ pageY, pageX }) => {
       if (!dragger.current.isDragging || !root.current) return
       setState((prev) => ({
         ...prev,
-        left: clientX - dragger.current.startX,
-        top: clientY - dragger.current.startY,
+        left: pageX - dragger.current.startX,
+        top: pageY - dragger.current.startY,
       }))
     },
     [],

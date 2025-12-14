@@ -1,4 +1,4 @@
-export const RE = /\b(?:modal|popup|pop)\b/gi
+export const RE = /\b(?:modal|popup|pop|submit)\b/gi
 
 export const SKIP_TAGS = new Set([
   "SCRIPT",
