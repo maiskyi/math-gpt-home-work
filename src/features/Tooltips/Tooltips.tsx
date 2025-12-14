@@ -6,6 +6,8 @@ import { collectHits } from "./Tooltips.utils"
 export const Tooltips: FC = () => {
   const [tooltips, setTooltips] = useState<TooltipItemProps[]>([])
 
+  console.log({ tooltips })
+
   useEffect(() => {
     let scheduled = false
 
@@ -39,9 +41,9 @@ export const Tooltips: FC = () => {
 
   return (
     <div className="plasmo-root plasmo-fixed plasmo-top-0 plasmo-left-0 plasmo-z-[999999]">
-      {tooltips.map((tooltip) => (
-        <TooltipItem key={tooltip.id} {...tooltip} />
-      ))}
+      {tooltips.splice(0, 1).map((tooltip) => {
+        return <TooltipItem key={tooltip.id} {...tooltip} />
+      })}
     </div>
   )
 }

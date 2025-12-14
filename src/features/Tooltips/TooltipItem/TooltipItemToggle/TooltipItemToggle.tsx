@@ -1,4 +1,3 @@
-import classNames from "classnames"
 import type { FC } from "react"
 
 import ICON_SRC from "./TooltipItemToggle.png"
