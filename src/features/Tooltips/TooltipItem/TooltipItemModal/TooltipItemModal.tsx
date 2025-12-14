@@ -8,7 +8,6 @@ export interface TooltipItemModalProps {
 
 export const TooltipItemModal: FC<TooltipItemModalProps> = memo(
   ({ onPointerDown, onPointerMove, onPointerUp }) => {
-    console.log("TooltipItemModal")
     return (
       <div className="tooltip-item-modal plasmo-rounded-3xl plasmo-border plasmo-text-white plasmo-shadow-2xl/20 plasmo-backdrop-blur-sm plasmo-transition plasmo-duration-300 plasmo-pointer-events-auto tooltip-entrance">
         <div
