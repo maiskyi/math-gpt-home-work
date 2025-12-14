@@ -4,7 +4,34 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: rgba(0, 0, 0, 0.5);
+  --glass-bg: color-mix(in oklab, var(--bg) 80%, transparent);
+  --glass-border: color-mix(in oklab, var(--glass-bg) 70%, white);
+}
+
 #plasmo-shadow-container {
   all: initial;
   box-sizing: border-box;
+}
+
+.plasmo-root {
+  all: initial;
+  box-sizing: border-box;
+}
+
+.tooltip-item-toggle {
+  width: 32px;
+  height: 32px;
+}
+
+.tooltip-item-modal {
+  min-width: 400px;
+  min-height: 120px;
+  transform: translate(16px, 16px);
+  border-color: color-mix(in oklab, var(--glass-bg) 70%, white);
+  background-color: color-mix(in oklab, var(--bg) 80%, transparent);
+  box-shadow:
+    rgba(255, 255, 255, 0.2) 0px 1px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -1px 0px inset;
 }
