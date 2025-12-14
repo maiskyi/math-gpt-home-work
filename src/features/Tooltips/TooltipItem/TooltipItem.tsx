@@ -68,7 +68,7 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
   )
 
   return (
-    <div ref={root} className="plasmo-absolute" style={{ left, top }}>
+    <div ref={root} className="tooltip-item plasmo-absolute" style={{ left, top }}>
       <TooltipItemToggle onClick={handleOnToggle} />
       {isOpen && (
         <TooltipItemModal

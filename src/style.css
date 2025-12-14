@@ -20,6 +20,10 @@
   box-sizing: border-box;
 }
 
+.tooltip-item {
+  transform: translate(0px, 0px);
+}
+
 .tooltip-item-toggle {
   width: 32px;
   height: 32px;
