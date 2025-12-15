@@ -5,15 +5,7 @@ import { TooltipItem, type TooltipItemProps } from "./TooltipItem"
 import { TooltipsContext } from "./Tooltips.context"
 
 export const Tooltips: FC = () => {
-  const [tooltips, setTooltips] = useState<Record<string, TooltipItemProps>>({
-    1: {
-      id: "1",
-      targetRect: {
-        left: 100,
-        top: 100,
-      },
-    }
-  })
+  const [tooltips, setTooltips] = useState<Record<string, TooltipItemProps>>({})
 
   const removeTooltip = useCallback((id: string) => {
     setTooltips((prev) => {
