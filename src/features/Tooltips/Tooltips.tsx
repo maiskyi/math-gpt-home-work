@@ -1,42 +1,30 @@
 import { useEffect, useState, type FC } from "react"
 
 import { TooltipItem, type TooltipItemProps } from "./TooltipItem"
-import { collectHits } from "./Tooltips.utils"
 
 export const Tooltips: FC = () => {
   const [tooltips, setTooltips] = useState<TooltipItemProps[]>([])
 
-  console.log({ tooltips })
-
   useEffect(() => {
-    let scheduled = false
-
-    const schedule = () => {
-      if (scheduled) return
-      scheduled = true
-      requestAnimationFrame(() => {
-        scheduled = false
-        setTooltips(collectHits())
-      })
+    const handler = (msg: any) => {
+      if (msg?.type === "ADD_TOOLTIP") {
+        setTooltips((prev) => [
+          ...prev,
+          {
+            id: Math.random().toString(36).substring(2, 15),
+            targetRect: {
+              left: 100,
+              // left: window.innerWidth / 2 - 200,
+              top: window.innerHeight / 2 - 60,
+              width: 100,
+              height: 100,
+            },
+          },
+        ])
+      }
     }
-
-    schedule()
-
-    const mo = new MutationObserver(() => schedule())
-    mo.observe(document.documentElement, {
-      subtree: true,
-      childList: true,
-      characterData: true,
-    })
-
-    // window.addEventListener("scroll", schedule, { passive: true })
-    window.addEventListener("resize", schedule)
-
-    return () => {
-      mo.disconnect()
-      // window.removeEventListener("scroll", schedule)
-      window.removeEventListener("resize", schedule)
-    }
+    chrome.runtime.onMessage.addListener(handler)
+    return () => chrome.runtime.onMessage.removeListener(handler)
   }, [])
 
   return (

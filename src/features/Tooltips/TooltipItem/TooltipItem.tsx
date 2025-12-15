@@ -1,12 +1,12 @@
 import {
   memo,
   useCallback,
+  useLayoutEffect,
   useRef,
   useState,
   type PointerEventHandler,
 } from "react"
 
-import { TOOLTIP_ITEM_OFFSET } from "./TooltipItem.const"
 import type { TooltipItemTargetRect } from "./TooltipItem.types"
 import { TooltipItemModal } from "./TooltipItemModal"
 import { TooltipItemToggle } from "./TooltipItemToggle"
@@ -17,18 +17,21 @@ export interface TooltipItemProps {
 }
 
 export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
-  const root = useRef<HTMLDivElement>(null)
+  const element = useRef<HTMLDivElement>(null)
+  const scrollable = useRef<HTMLElement | Document>(null)
 
   const dragger = useRef({
     isDragging: false,
     startX: 0,
     startY: 0,
+    lastScrollTop: 0,
+    lastScrollLeft: 0,
   })
 
-  const [{ isOpen, left, top }, setState] = useState({
-    isOpen: false,
-    left: targetRect.left + targetRect.width + TOOLTIP_ITEM_OFFSET,
-    top: targetRect.top - targetRect.height + TOOLTIP_ITEM_OFFSET,
+  const [{ isOpen, elementX, elementY }, setState] = useState({
+    isOpen: true,
+    elementX: targetRect.left,
+    elementY: targetRect.top,
   })
 
   const handleOnToggle = () => {
@@ -40,12 +43,12 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
 
   const handleOnPointerDown: PointerEventHandler<HTMLDivElement> = useCallback(
     ({ currentTarget, pointerId, clientX, clientY }) => {
-      if (!root.current) return
+      if (!element.current) return
       dragger.current.isDragging = true
       currentTarget.setPointerCapture(pointerId)
-      const { left, top } = root.current.getBoundingClientRect()
-      dragger.current.startX = clientX - left - window.scrollX
-      dragger.current.startY = clientY - top - window.scrollY
+      const { left, top } = element.current.getBoundingClientRect()
+      dragger.current.startX = clientX - left
+      dragger.current.startY = clientY - top
     },
     [],
   )
@@ -56,19 +59,88 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
   }, [])
 
   const handleOnPointerMove: PointerEventHandler<HTMLDivElement> = useCallback(
-    ({ pageY, pageX }) => {
-      if (!dragger.current.isDragging || !root.current) return
+    ({ clientX, clientY }) => {
+      if (!dragger.current.isDragging || !element.current) return
+      console.log(clientX, dragger.current.startX)
       setState((prev) => ({
         ...prev,
-        left: pageX - dragger.current.startX,
-        top: pageY - dragger.current.startY,
+        elementX: clientX - dragger.current.startX,
+        elementY: clientY - dragger.current.startY,
       }))
     },
     [],
   )
 
+  useLayoutEffect(() => {
+    document.addEventListener(
+      "scroll",
+      ({ target }) => {
+        const {
+          container,
+          rect: targetRect,
+          scrollTop: currentScrollTop,
+          scrollLeft: currentScrollLeft,
+        } = (() => {
+          if (target instanceof HTMLElement) {
+            const rect = target.getBoundingClientRect()
+            return {
+              rect,
+              container: target,
+              scrollTop: target.scrollTop,
+              scrollLeft: target.scrollLeft,
+            }
+          }
+
+          return {
+            container: document,
+            scrollTop: window.scrollY,
+            scrollLeft: window.scrollX,
+            rect: {
+              top: 0,
+              left: 0,
+              width: window.innerWidth,
+              height: window.innerHeight,
+              right: window.innerWidth,
+              bottom: window.innerHeight,
+            },
+          }
+        })()
+
+        if (!element.current) return
+
+        if (!scrollable.current) {
+          const elementRect = element.current?.getBoundingClientRect()
+          const overlaps =
+            elementRect.left >= targetRect.left &&
+            elementRect.left < targetRect.right
+          if (overlaps) {
+            scrollable.current = container
+          }
+        }
+
+        if (scrollable.current && scrollable.current !== container) return
+
+        const scrollDiffY = currentScrollTop - dragger.current.lastScrollTop
+        const scrollDiffX = currentScrollLeft - dragger.current.lastScrollLeft
+
+        setState(({ elementX, elementY, ...rest }) => ({
+          ...rest,
+          elementX: elementX - scrollDiffX,
+          elementY: elementY - scrollDiffY,
+        }))
+
+        dragger.current.lastScrollTop = currentScrollTop
+        dragger.current.lastScrollLeft = currentScrollLeft
+      },
+      true,
+    )
+  }, [])
+
   return (
-    <div ref={root} className="tooltip-item plasmo-absolute" style={{ left, top }}>
+    <div
+      ref={element}
+      className="tooltip-item plasmo-fixed"
+      style={{ left: elementX, top: elementY }}>
       <TooltipItemToggle onClick={handleOnToggle} />
       {isOpen && (
         <TooltipItemModal

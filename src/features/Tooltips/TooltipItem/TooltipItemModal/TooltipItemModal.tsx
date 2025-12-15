@@ -30,10 +30,10 @@ export const TooltipItemModal: FC<TooltipItemModalProps> = memo(
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            stroke-width="2.5">
+            strokeWidth="2.5">
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="M5 12h14"></path>
           </svg>
         </button>
