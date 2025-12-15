@@ -5,9 +5,9 @@
 @tailwind utilities;
 
 :root {
-  --bg: rgba(0, 0, 0, 0.5);
-  --glass-bg: color-mix(in oklab, var(--bg) 80%, transparent);
-  --glass-border: color-mix(in oklab, var(--glass-bg) 70%, white);
+  --background: rgba(0, 0, 0, 0.5);
+  --background-glass: color-mix(in oklab, var(--bg) 80%, transparent);
+  --border-glass: color-mix(in oklab, var(--background-glass) 70%, white);
 }
 
 #plasmo-shadow-container {
@@ -32,8 +32,8 @@
 
 .tooltip-item-modal {
   min-width: 400px;
-  border-color: color-mix(in oklab, var(--glass-bg) 70%, white);
-  background-color: color-mix(in oklab, var(--bg) 80%, transparent);
+  border-color: color-mix(in oklab, var(--background-glass) 70%, white);
+  background-color: color-mix(in oklab, var(--background) 80%, transparent);
   box-shadow:
     rgba(255, 255, 255, 0.2) 0px 1px 0px inset,
     rgba(0, 0, 0, 0.1) 0px -1px 0px inset;
