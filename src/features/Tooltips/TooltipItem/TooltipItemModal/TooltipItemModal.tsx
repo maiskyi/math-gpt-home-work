@@ -1,6 +1,9 @@
-import { memo, type FC, type PointerEventHandler } from "react"
+import { memo, useContext, type FC, type PointerEventHandler } from "react"
+
+import { TooltipsContext } from "../../Tooltips.context"
 
 export interface TooltipItemModalProps {
+  id: string
   onClose: () => void
   onPointerUp: PointerEventHandler<HTMLDivElement>
   onPointerMove: PointerEventHandler<HTMLDivElement>
@@ -8,7 +11,9 @@ export interface TooltipItemModalProps {
 }
 
 export const TooltipItemModal: FC<TooltipItemModalProps> = memo(
-  ({ onPointerDown, onPointerMove, onPointerUp, onClose }) => {
+  ({ id, onPointerDown, onPointerMove, onPointerUp, onClose }) => {
+    const { removeTooltip } = useContext(TooltipsContext)
+
     return (
       <div className="tooltip-item-modal plasmo-rounded-3xl plasmo-border plasmo-text-white plasmo-shadow-2xl/20 plasmo-backdrop-blur-sm plasmo-transition plasmo-duration-300 plasmo-pointer-events-auto tooltip-entrance">
         <div
@@ -37,6 +42,16 @@ export const TooltipItemModal: FC<TooltipItemModalProps> = memo(
               d="M5 12h14"></path>
           </svg>
         </button>
+        <div className="plasmo-p-4 plasmo-pt-12">
+          <button
+            type="submit"
+            onClick={() => removeTooltip(id)}
+            className="plasmo-px-4 plasmo-py-2 plasmo-rounded-md plasmo-bg-red-600 plasmo-text-white plasmo-font-medium
+             plasmo-hover:bg-red-700 plasmo-active:bg-red-800
+             plasmo-focus:outline-none plasmo-focus:ring-2 plasmo-focus:ring-blue-400 plasmo-w-full">
+            Remove tooltip
+          </button>
+        </div>
       </div>
     )
   },

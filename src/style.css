@@ -32,7 +32,6 @@
 
 .tooltip-item-modal {
   min-width: 400px;
-  min-height: 120px;
   border-color: color-mix(in oklab, var(--glass-bg) 70%, white);
   background-color: color-mix(in oklab, var(--bg) 80%, transparent);
   box-shadow:

@@ -16,7 +16,7 @@ export interface TooltipItemProps {
   targetRect: TooltipItemTargetRect
 }
 
-export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
+export const TooltipItem = memo<TooltipItemProps>(({ id, targetRect }) => {
   const element = useRef<HTMLDivElement>(null)
   const scrollable = useRef<HTMLElement | Document>(null)
 
@@ -24,8 +24,8 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
     isDragging: false,
     startX: 0,
     startY: 0,
-    lastScrollTop: 0,
-    lastScrollLeft: 0,
+    lastScrollTop: undefined,
+    lastScrollLeft: undefined,
   })
 
   const [{ isOpen, elementX, elementY }, setState] = useState({
@@ -120,6 +120,14 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
 
         if (scrollable.current && scrollable.current !== container) return
 
+        if (!dragger.current.lastScrollTop) {
+          dragger.current.lastScrollTop = currentScrollTop
+        }
+
+        if (!dragger.current.lastScrollLeft) {
+          dragger.current.lastScrollLeft = currentScrollLeft
+        }
+
         const scrollDiffY = currentScrollTop - dragger.current.lastScrollTop
         const scrollDiffX = currentScrollLeft - dragger.current.lastScrollLeft
 
@@ -144,6 +152,7 @@ export const TooltipItem = memo<TooltipItemProps>(({ targetRect }) => {
       <TooltipItemToggle onClick={handleOnToggle} />
       {isOpen && (
         <TooltipItemModal
+          id={id}
           onClose={handleOnToggle}
           onPointerDown={handleOnPointerDown}
           onPointerMove={handleOnPointerMove}

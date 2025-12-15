@@ -1,26 +1,41 @@
-import { useEffect, useState, type FC } from "react"
+import { useCallback, useEffect, useState, type FC } from "react"
 
+import type { ChromeTabMessage } from "../features.types"
 import { TooltipItem, type TooltipItemProps } from "./TooltipItem"
+import { TooltipsContext } from "./Tooltips.context"
 
 export const Tooltips: FC = () => {
-  const [tooltips, setTooltips] = useState<TooltipItemProps[]>([])
+  const [tooltips, setTooltips] = useState<Record<string, TooltipItemProps>>({
+    1: {
+      id: "1",
+      targetRect: {
+        left: 100,
+        top: 100,
+      },
+    }
+  })
+
+  const removeTooltip = useCallback((id: string) => {
+    setTooltips((prev) => {
+      const { [id]: _, ...rest } = prev
+      return rest
+    })
+  }, [])
 
   useEffect(() => {
-    const handler = (msg: any) => {
+    const handler = (msg: ChromeTabMessage) => {
       if (msg?.type === "ADD_TOOLTIP") {
-        setTooltips((prev) => [
+        const id = Math.random().toString(36).substring(2, 15)
+        setTooltips((prev) => ({
           ...prev,
-          {
-            id: Math.random().toString(36).substring(2, 15),
+          [id]: {
+            id,
             targetRect: {
-              left: 100,
-              // left: window.innerWidth / 2 - 200,
-              top: window.innerHeight / 2 - 60,
-              width: 100,
-              height: 100,
+              left: msg.x,
+              top: msg.y,
             },
           },
-        ])
+        }))
       }
     }
     chrome.runtime.onMessage.addListener(handler)
@@ -28,10 +43,12 @@ export const Tooltips: FC = () => {
   }, [])
 
   return (
-    <div className="plasmo-root plasmo-fixed plasmo-top-0 plasmo-left-0 plasmo-z-[999999]">
-      {tooltips.map((tooltip) => {
-        return <TooltipItem key={tooltip.id} {...tooltip} />
-      })}
-    </div>
+    <TooltipsContext.Provider value={{ removeTooltip }}>
+      <div className="plasmo-root plasmo-fixed plasmo-top-0 plasmo-left-0 plasmo-z-[999999]">
+        {Object.values(tooltips).map((tooltip) => {
+          return <TooltipItem key={tooltip.id} {...tooltip} />
+        })}
+      </div>
+    </TooltipsContext.Provider>
   )
 }

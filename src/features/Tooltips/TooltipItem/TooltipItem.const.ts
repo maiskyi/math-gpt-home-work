@@ -1,1 +1,0 @@
-export const TOOLTIP_ITEM_OFFSET = 8
